@@ -1,0 +1,18 @@
+#!/bin/sh
+
+FILE=$1
+STARTTIME=$(date +%s%N | cut -b1-13)
+SUM=$(cksum $FILE)
+i=0
+
+while true; do
+	SUMNEW=$(cksum $FILE)
+	if [ "$SUM" != "$SUMNEW" ]; then
+		TIME=$(date +%s%N | cut -b1-13)
+		DIFF=$(($TIME-$STARTTIME))
+		FPS=$((1000 * $i / $DIFF))
+		printf "%s, %s, %s FPS\n" $DIFF $i $FPS
+		SUM=$SUMNEW
+		i=$(($i+1))
+	fi
+done
